@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->string('phone_number', 20);
+            $table->string('phone', 20);
             $table->text('content');
-            $table->enum('status', ['pending', 'sent'])->default('pending');
-            $table->string('message_id')->nullable();
+            $table->enum('status', ['pending', 'processing', 'sent', 'failed'])->default('pending');
+            $table->string('message_id')->nullable()->unique();
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
 

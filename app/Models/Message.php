@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     protected $fillable = [
-        'phone_number',
+        'phone',
         'content',
         'status',
         'message_id',
@@ -15,6 +15,6 @@ class Message extends Model
     ];
 
     protected $casts = [
-        'sent_at' => 'datetime',
+        'status' => \App\Enums\MessageStatus::class,
     ];
 }

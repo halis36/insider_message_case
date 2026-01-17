@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Repositories;
+use App\Enums\MessageStatus;
 use App\Models\Message;
 use App\Repositories\Contracts\MessageRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+
 class MessageRepository implements MessageRepositoryInterface
 {
     public function getUnsentMessages(int $limit): Collection
@@ -17,8 +21,12 @@ class MessageRepository implements MessageRepositoryInterface
 
     public function markAsSent(Message $message, string $messageId): void
     {
+        if ($message->message_id) {
+            return;
+        }
+
         $message->update([
-            'status'     => 'sent',
+            'status'     => MessageStatus::SENT,
             'message_id' => $messageId,
             'sent_at'    => now(),
         ]);

@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 class MessageService
 {
-    public function __construct(private MessageRepositoryInterface $messageRepository)
+    public function __construct(
+        private MessageRepositoryInterface $messageRepository
+    )
     {
-        //
+
     }
 
     public function getUnsentMessages(int $limit = 2)
