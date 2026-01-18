@@ -13,8 +13,6 @@ class SendMessagesCommand extends Command
 
     public function handle(MessageService $messageService): int
     {
-        dd(config('cache.default'));
-
         $this->info('Message sending started...');
 
         while (true) {

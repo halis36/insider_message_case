@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('phone', 20);
             $table->text('content');
-            $table->enum('status', ['pending', 'processing', 'sent', 'failed'])->default('pending');
+            $table->enum('status', ['pending', 'sent'])->default('pending');
             $table->string('message_id')->nullable()->unique();
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
