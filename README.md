@@ -1,66 +1,63 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+**Message Queue & Webhook Service**
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Bu case, Laravel 11 kullanılarak geliştirilmiş bir mesaj gönderim sistemdir.  
+Mesajlar veritabanına `pending` olarak kaydedilir, queue üzerinden webhook’a gönderilir ve sonuçlarına göre `sent` olarak güncellenir. 
+Başarılı mesajlar Redis’e cache edilir.
 
-## About Laravel
+**Kullanılan Teknolojiler**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.4
+- Laravel 11.31
+- MySQL
+- Queue (Database Driver)
+- Redis (Cache)
+- Swagger (l5-swagger v6) (composer install ile beraber gelecektir fakat enpointler için "php artisan l5-swagger:generate" komutunu girmek gerekeir)
+- webhook.site
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Proje Çalıştırma Adımları**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- git clone https://github.com/halis36/insider_message_case.git
+- composer install
+- .env oluşturulacak 
+- php artisan key:generate komutu çalıştırılacak
+- veritabanı ayarları yapıldıktan sonra "php artisan migrate" komutu çalıştırılacak
+- Bununla beraber queue (jobs ve failed_jobs tabloları da otomatik gelecektir)
 
-## Learning Laravel
+**Proje Linkleri**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+API Base URL: http://127.0.0.1:8000
+Swagger UI: http://127.0.0.1:8000/api/documentation#/
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Queue Ayarları**
+QUEUE_CONNECTION=database (.env de şeklinde ayarlanmalı)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Redis Ayarları**
+- CACHE_STORE=redis (.env de şeklinde ayarlanmalı)
 
-## Laravel Sponsors
+**webhook.site Ayarları**
+- WEBHOOK_URL=https://webhook.site/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (env'de url ayarlanmalı)
+  - config/services.php içerisinde 
+    'webhook' => [
+        'url' => env('WEBHOOK_URL'),
+   ],  şeklinde ayarlanmalı
+- webhook.site panalinde "edit" kısmında bazı ayarlamalar yapılmalı
+  - status code = 202
+  - content type = Content-Type: application/json
+  - content = {
+    "message": "Accepted",
+    "messageId": "67f2f8a8-ea58-4ed0-a6f9-ff217df4d849" (prod hesapta dinamik olacak burası)
+    }
+  şeklinde ayarlanmalı
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- http://127.0.0.1:8000/api/documentation#/ adresinde
+  - POST /api/messages endpointinden **messages** tablosuna "pending" statusu ile kayıt eklenebilir. 
+    - örnek json 
+     {
+      "phone": "+905XXXXXXXXX",
+      "content": "Test message"
+      }
+  - GET /api/messages ile mesajlar listelenebilir
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proje tamamen kurulduktan ve veritabanına kayıtlar eklendikten sonra
+1. php artisan queue:work ile kuyruk aktif edilir
+2. php artisan messages:send command çalıştırılarak veritabanındaki mesajlar işleme alınır.
