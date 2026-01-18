@@ -11,7 +11,7 @@ Başarılı mesajlar Redis’e cache edilir.
 - MySQL
 - Queue (Database Driver)
 - Redis (Cache)
-- Swagger (l5-swagger v6) (composer install ile beraber gelecektir fakat enpointler için "php artisan l5-swagger:generate" komutunu girmek gerekeir)
+- Swagger (l5-swagger v6) (composer install ile beraber gelecektir fakat endpointler için "php artisan l5-swagger:generate" komutunu girmek gerekeir)
 - webhook.site
 
 **Proje Çalıştırma Adımları**
